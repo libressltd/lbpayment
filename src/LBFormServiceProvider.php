@@ -14,9 +14,7 @@ class LBPaymentServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/views', 'lbform');
 		$this->publishes([
-	        __DIR__.'/views' => base_path('resources/views/layouts/form'),
             __DIR__.'/models' => base_path('app/Models'),
             __DIR__.'/migrations' => base_path('database/migrations'),
 	    ], "lbpayment");

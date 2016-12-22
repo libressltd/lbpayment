@@ -4,8 +4,7 @@ namespace LIBRESSLtd\LBPayment\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use GuzzleHttp\Client;
-use App\Models\Transaction;
+use App\Models\LBP_transaction;
 
 class LBPCoinPaymentController extends Controller
 {
@@ -16,7 +15,7 @@ class LBPCoinPaymentController extends Controller
      */
     public function index()
     {
-        $transaction = Transaction::addTransaction(0.3, "BTC");
+        $transaction = LBP_transaction::addTransaction(0.3, "BTC");
         return $transaction;
     }
 
