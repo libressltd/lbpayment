@@ -34,6 +34,7 @@ class CreateLBPTransactionsTable extends Migration
 
             $table->char('created_by', 32)->nullable();
             $table->char('updated_by', 32)->nullable();
+            $table->integer('status_id');
             $table->timestamps();
             $table->primary('id');
         });

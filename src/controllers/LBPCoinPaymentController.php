@@ -5,6 +5,7 @@ namespace LIBRESSLtd\LBPayment\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\LBP_transaction;
+use App\Models\LBP_transaction_ipn;
 
 class LBPCoinPaymentController extends Controller
 {
@@ -37,7 +38,33 @@ class LBPCoinPaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $transaction = LBP_transaction::where("txn_id", $request->txn_id)->first();
+        if ($transaction)
+        {
+            $ipn = new LBP_transaction_ipn;
+            $ipn->ipn_version = $request->ipn_version;
+            $ipn->ipn_id = $request->ipn_id;
+            $ipn->ipn_mode = $request->ipn_mode;
+            $ipn->merchant = $request->merchant;
+            $ipn->ipn_type = $request->ipn_type;
+            $ipn->txn_id = $request->txn_id;
+            $ipn->status = $request->status;
+            $ipn->status_text = $request->status_text;
+            $ipn->currency1 = $request->currency1;
+            $ipn->currency2 = $request->currency2;
+            $ipn->fee = $request->fee;
+            $ipn->amount1 = $request->amount1;
+            $ipn->amount2 = $request->amount2;
+            $ipn->fee = $request->fee;
+            $ipn->buyer_name = $request->buyer_name;
+            $ipn->received_amount = $request->received_amount;
+            $ipn->received_confirms = $request->received_confirms;
+            $ipn->lbp_transaction_id = $transaction->id;
+            $ipn->save();
+
+            $transaction->status_id = $ipn->status;
+            $transaction->save();
+        }
     }
 
     /**

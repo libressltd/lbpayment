@@ -41,8 +41,8 @@ class LBP_transaction extends Model
             'version' => '1',
             'key' => '076336aab864a9021078f7c1ff110cfc640f47d408c9fe070953b3ca5d9ff9d3',
             'cmd' => 'create_transaction',
-            'amount' => $transaction->amount,
-            'currency1' => $transaction->currency1,
+            'amount' => $this->amount,
+            'currency1' => $this->currency1,
             'currency2' => 'BTC',
             'ipn_url' => "http://testbf.xenren.co/lbpayment/coinpayment"
         ];
@@ -62,12 +62,12 @@ class LBP_transaction extends Model
 
         $response_object = json_decode($res->getBody());
 
-        $transaction->txn_id = $response_object->result->txn_id;
-        $transaction->confirms_needed = $response_object->result->confirms_needed;
-        $transaction->timeout = $response_object->result->timeout;
-        $transaction->status_url = $response_object->result->status_url;
-        $transaction->qrcode_url = $response_object->result->qrcode_url;
-        $transaction->save();
+        $this->txn_id = $response_object->result->txn_id;
+        $this->confirms_needed = $response_object->result->confirms_needed;
+        $this->timeout = $response_object->result->timeout;
+        $this->status_url = $response_object->result->status_url;
+        $this->qrcode_url = $response_object->result->qrcode_url;
+        $this->save();
     }
 
     static public function boot()
