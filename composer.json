@@ -1,0 +1,24 @@
+{
+    "name": "libressltd/lbpayment",
+    "description": "Form element for reuse",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "libre ss ltd",
+            "email": "contact@libreteam.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LIBRESSLtd\\LBPayment\\": "src/"
+        },
+        "classmap": [
+            "src/controllers"
+        ]
+    },
+    "minimum-stability": "stable"
+}
