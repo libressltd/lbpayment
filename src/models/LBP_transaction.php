@@ -21,6 +21,11 @@ class LBP_transaction extends Model
         return $this->belongsTo("App\Models\User", "updated_by");
     }
 
+    public function transaction()
+    {
+        return $this->morphTo();
+    }
+
     static function addTransaction($amount, $currency)
     {
     	$transaction = new LBP_transaction;
@@ -73,17 +78,21 @@ class LBP_transaction extends Model
     static public function boot()
     {
         LBP_transaction::bootUuid32ModelTrait();
-        LBP_transaction::saving(function ($media) {
+        LBP_transaction::saving(function ($transaction) {
             if (Auth::user())
             {
-                if ($media->id)
+                if ($transaction->id)
                 {
-                    $media->updated_by = Auth::user()->id;
+                    $transaction->updated_by = Auth::user()->id;
                 }
                 else
                 {
-                    $media->created_by = Auth::user()->id;
+                    $transaction->created_by = Auth::user()->id;
                 }
+            }
+            if ($transaction->transaction && method_exists($transaction->transaction, "LBP_transaction_updated"))
+            {
+                $transaction->transaction->LBP_transaction_updated($transaction->status);
             }
         });
     }
