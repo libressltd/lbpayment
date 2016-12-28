@@ -92,7 +92,7 @@ class LBP_transaction extends Model
             }
             if ($transaction->transaction && method_exists($transaction->transaction, "LBP_transaction_updated"))
             {
-                $transaction->transaction->LBP_transaction_updated($transaction->status);
+                $transaction->transaction->LBP_transaction_updated($transaction->status_id);
             }
         });
     }
