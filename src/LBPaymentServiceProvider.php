@@ -16,6 +16,7 @@ class LBPaymentServiceProvider extends ServiceProvider
     {
 		$this->publishes([
             __DIR__.'/models' => base_path('app/Models'),
+            __DIR__.'/config' => base_path('config'),
             __DIR__.'/migrations' => base_path('database/migrations'),
 	    ], "lbpayment");
     }

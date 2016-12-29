@@ -1,1 +1,0 @@
-<div class="form-group">    {{ Form::label($title, null, ['class' => 'control-label']) }}    {{ Form::number($name, $value, ['class' => 'form-control', 'min' => $min, 'max' => $max]) }}</div>

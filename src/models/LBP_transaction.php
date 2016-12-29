@@ -11,6 +11,23 @@ class LBP_transaction extends Model
 {
 	use Uuid32ModelTrait;
 
+    public var $wallet_name;
+    public var $wallet_info;
+
+    function __construct($wallet = false)
+    {
+        parent::__construct();
+        if ($wallet)
+        {
+            $this->wallet_name = $wallet;
+        }
+        else
+        {
+            $this->wallet_name = config('lbpayment.default');
+        }
+        $this->wallet_info = config('lbpayment.wallets.'.$this->wallet_name);
+    }
+
     public function creator()
     {
         return $this->belongsTo("App\Models\User", "created_by");
@@ -44,15 +61,15 @@ class LBP_transaction extends Model
     {
         $form_params = [
             'version' => '1',
-            'key' => '076336aab864a9021078f7c1ff110cfc640f47d408c9fe070953b3ca5d9ff9d3',
+            'key' => $this->wallet_info['api_key'];
             'cmd' => 'create_transaction',
             'amount' => $this->amount,
             'currency1' => $this->currency1,
             'currency2' => 'BTC',
-            'ipn_url' => "http://testbf.xenren.co/lbpayment/coinpayment"
+            'ipn_url' => $this->wallet_info['ipn_url']
         ];
 
-        $private_key = "708029D7f9D7e733AB1975711892a2d99000E16E56128Be9e8DE1574D7628Eaa";
+        $private_key = $this->wallet_info['api_secret'];
         $url_encoded_params = http_build_query($form_params);
 
         $hmac = hash_hmac("sha512", $url_encoded_params, $private_key);
