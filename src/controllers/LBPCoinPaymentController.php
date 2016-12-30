@@ -47,7 +47,6 @@ class LBPCoinPaymentController extends Controller
             $ipn->ipn_mode = $request->ipn_mode;
             $ipn->merchant = $request->merchant;
             $ipn->ipn_type = $request->ipn_type;
-            $ipn->txn_id = $request->txn_id;
             $ipn->status = $request->status;
             $ipn->status_text = $request->status_text;
             $ipn->currency1 = $request->currency1;

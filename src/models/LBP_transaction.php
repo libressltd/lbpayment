@@ -49,12 +49,61 @@ class LBP_transaction extends Model
     	$transaction->amount = $amount;
     	$transaction->currency1 = $currency;
     	$transaction->currency2 = "BTC";
-    	$transaction->network = "coinpayments";
+        $transaction->network = "coinpayments";
+        $transaction->type = "deposit";
     	$transaction->save();
 
         $transaction->requestTransaction();
 
         return $transaction;
+    }
+
+    public function addWithdrawal($amount, $currency, $wallet_id)
+    {
+        $transaction = new LBP_transaction;
+        $transaction->amount = $amount;
+        $transaction->currency1 = $currency;
+        $transaction->currency2 = "BTC";
+        $transaction->network = "coinpayments";
+        $transaction->type = "withdrawal";
+        $transaction->send_to = $wallet_id;
+        $transaction->save();
+
+        $transaction->requestWithdrawal();
+
+        return $transaction;
+    }
+
+    public function requestWithdrawal()
+    {
+        $form_params = [
+            'version' => '1',
+            'key' => $this->wallet_info['api_key'];
+            'cmd' => 'create_withdrawal',
+            'amount' => $this->amount,
+            'currency' => $this->currency1,
+            'address' => $this->send_to,
+            'ipn_url' => $this->wallet_info['ipn_url']
+            'auto_confirm' => 0
+        ];
+
+        $private_key = $this->wallet_info['api_secret'];
+        $url_encoded_params = http_build_query($form_params);
+
+        $hmac = hash_hmac("sha512", $url_encoded_params, $private_key);
+
+        $client = new Client();
+        $res = $client->request('POST', 'https://www.coinpayments.net/api.php', [
+            'form_params' => $form_params,
+            'headers' => [
+                'HMAC' => $hmac
+            ],
+        ]);
+
+        $response_object = json_decode($res->getBody());
+
+        $this->txn_id = $response_object->result->id;
+        $this->save();
     }
 
     public function requestTransaction()

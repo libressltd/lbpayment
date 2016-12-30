@@ -19,6 +19,8 @@ class CreateLBPTransactionsTable extends Migration
             $table->decimal('amount', 10, 4);
             $table->char('transaction_id', 32)->nullable();
             $table->string('transaction_type')->nullable();
+            $table->string('type')->nullable();
+            $table->string('send_to')->nullable();
 
             $table->string('network');
 
