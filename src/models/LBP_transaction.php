@@ -9,10 +9,10 @@ use Auth;
 
 class LBP_transaction extends Model
 {
-	use Uuid32ModelTrait;
+    use Uuid32ModelTrait;
 
-    public var $wallet_name;
-    public var $wallet_info;
+    public $wallet_name;
+    public $wallet_info;
 
     function __construct($wallet = false)
     {
@@ -45,20 +45,20 @@ class LBP_transaction extends Model
 
     static function addTransaction($amount, $currency)
     {
-    	$transaction = new LBP_transaction;
-    	$transaction->amount = $amount;
-    	$transaction->currency1 = $currency;
-    	$transaction->currency2 = "BTC";
+        $transaction = new LBP_transaction;
+        $transaction->amount = $amount;
+        $transaction->currency1 = $currency;
+        $transaction->currency2 = "BTC";
         $transaction->network = "coinpayments";
         $transaction->type = "deposit";
-    	$transaction->save();
+        $transaction->save();
 
         $transaction->requestTransaction();
 
         return $transaction;
     }
 
-    public function addWithdrawal($amount, $currency, $wallet_id)
+    static public function addWithdrawal($amount, $currency, $wallet_id)
     {
         $transaction = new LBP_transaction;
         $transaction->amount = $amount;
@@ -78,12 +78,12 @@ class LBP_transaction extends Model
     {
         $form_params = [
             'version' => '1',
-            'key' => $this->wallet_info['api_key'];
+            'key' => $this->wallet_info['api_key'],
             'cmd' => 'create_withdrawal',
-            'amount' => $this->amount,
+            'amount' => abs($this->amount),
             'currency' => $this->currency1,
             'address' => $this->send_to,
-            'ipn_url' => $this->wallet_info['ipn_url']
+            'ipn_url' => $this->wallet_info['ipn_url'],
             'auto_confirm' => 0
         ];
 
@@ -101,6 +101,10 @@ class LBP_transaction extends Model
         ]);
 
         $response_object = json_decode($res->getBody());
+        if (!isset($response_object->error) || $response_object->error != "ok")
+        {
+            dd($response_object);
+        }
 
         $this->txn_id = $response_object->result->id;
         $this->save();
@@ -110,7 +114,7 @@ class LBP_transaction extends Model
     {
         $form_params = [
             'version' => '1',
-            'key' => $this->wallet_info['api_key'];
+            'key' => $this->wallet_info['api_key'],
             'cmd' => 'create_transaction',
             'amount' => $this->amount,
             'currency1' => $this->currency1,
