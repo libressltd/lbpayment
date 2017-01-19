@@ -28,19 +28,9 @@ class LBP_transaction extends Model
         $this->wallet_info = config('lbpayment.wallets.'.$this->wallet_name);
     }
 
-    public function creator()
+    public function schema()
     {
-        return $this->belongsTo("App\Models\User", "created_by");
-    }
-
-    public function updater()
-    {
-        return $this->belongsTo("App\Models\User", "updated_by");
-    }
-
-    public function transaction()
-    {
-        return $this->morphTo();
+        return "bitcoin:".$this->send_to."?amount=".$this->amount;
     }
 
     static function addTransaction($amount, $currency)
@@ -138,11 +128,29 @@ class LBP_transaction extends Model
         $response_object = json_decode($res->getBody());
 
         $this->txn_id = $response_object->result->txn_id;
+        $this->send_to = $response_object->result->address;
         $this->confirms_needed = $response_object->result->confirms_needed;
         $this->timeout = $response_object->result->timeout;
         $this->status_url = $response_object->result->status_url;
         $this->qrcode_url = $response_object->result->qrcode_url;
         $this->save();
+    }
+
+    // relationship
+
+    public function creator()
+    {
+        return $this->belongsTo("App\Models\User", "created_by");
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo("App\Models\User", "updated_by");
+    }
+
+    public function transaction()
+    {
+        return $this->morphTo();
     }
 
     static public function boot()

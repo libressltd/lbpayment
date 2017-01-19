@@ -12,9 +12,12 @@ LIBRESSLtd\LBPayment\LBPaymentServiceProvider::class,
 
 Run migration & vendor publish
 
+```php
 php artisan migration
 
 php artisan vendor:publish --tag="lbpayment" --force
+php artisan vendor:publish --tag="lbpayment_config" --force
+```
 
 Implement inside your transaction class (to handle when transaction change the status)
 
