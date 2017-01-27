@@ -1,13 +1,12 @@
 <?php
 
-namespace LIBRESSLtd\LBPayment\Controllers;
+namespace LIBRESSLtd\LBMessenger\Controllers\Ajax;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\LBP_transaction;
-use App\Models\LBP_transaction_ipn;
+use App\Models\LBM_conversation;
 
-class LBPCoinPaymentController extends Controller
+class LBM_conversationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +15,8 @@ class LBPCoinPaymentController extends Controller
      */
     public function index()
     {
-        $transaction = LBP_transaction::addTransaction(0.3, "BTC");
-        return $transaction;
+        $conversations = LBM_conversation::with("last_user")->orderBy("updated_at", "desc")->get();
+        return $conversations;
     }
 
     /**

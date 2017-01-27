@@ -1,9 +1,12 @@
 {
-    "name": "libressltd/lbpayment",
+    "name": "libressltd/lbmessenger",
     "description": "Form element for reuse",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "*"
+        "guzzlehttp/guzzle": "*",
+        "libressltd/lbsa": "*",
+        "alsofronie/eloquent-uuid": "*",
+        "libressltd/lbform": "*"
     },
     "license": "MIT",
     "authors": [
@@ -14,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "LIBRESSLtd\\LBPayment\\": "src/"
+            "LIBRESSLtd\\LBMessenger\\": "src/"
         },
         "classmap": [
             "src/controllers"
